@@ -44,8 +44,8 @@ def authenticate_user(username: str, password: str, db):
         return False
     return user
 
-def create_access_token(username: str,  user_id:int, expires_delta:timedelta):
-    encode = {'sub': username,'id': user_id}
+def create_access_token(username: str,  user_id:int, user_role: str, expires_delta:timedelta):
+    encode = {'sub': username,'id': user_id,'user_role': user_role}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, secret_key, algorithm=algorithm)
@@ -69,19 +69,19 @@ async def get_current_user(token: Annotated[str,Depends(oauth2_bearer)]):
         payload = jwt.decode(token, secret_key, algorithms=[algorithm])
         username:str = payload['sub']
         user_id:int = payload['id']
+        user_role:str = payload['user_role']
 
         if username is None or user_id is None:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
 
-        return {'username':username,'user_id':user_id}
+        return {'username':username,'user_id':user_id , 'user_role':user_role}
 
     except JWTError:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
 
 
 @router.post("/",status_code=status.HTTP_201_CREATED)
-async def create_user(db: db_dependency,
-                      newUserRequest:createUserRequest):
+async def create_user(db: db_dependency,newUserRequest:createUserRequest):
     newUser = Users(
         email=newUserRequest.email,
         username=newUserRequest.username,
@@ -101,6 +101,6 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     if not user:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
 
-    token = create_access_token(user.username, user.id,timedelta(minutes=20))
+    token = create_access_token(user.username, user.id,user.role, timedelta(minutes=20))
 
     return {'access_token':token, 'token_type': 'bearer'}

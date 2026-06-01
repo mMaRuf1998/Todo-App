@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status, Path
 from database import SessionLocal
 from models import Todos
-
+from .auth import get_current_user
 router = APIRouter()
 
 
@@ -22,10 +22,11 @@ def get_db():
         db.close()
 
 db_dependency = Annotated[Session,Depends(get_db)]
+user_dependency = Annotated[dict,Depends(get_current_user)]
 
 @router.get("/")
-async def read_all(db: db_dependency):
-    return db.query(Todos).all()
+async def read_all(user: user_dependency,db: db_dependency):
+    return db.query(Todos).filter(Todos.owner_id==user.get('user_id')).all()
 
 #Find a todo by ID:
 
@@ -38,8 +39,13 @@ async def read_todo_by_id(db: db_dependency, todo_id: int = Path(gt=0)):
 
 
 @router.post("/todos/create", status_code=status.HTTP_201_CREATED)
-async def create_todo(db:db_dependency, todo_request: todo_Object):
-    newTodo = Todos(**todo_request.model_dump())
+async def create_todo(user: user_dependency, db:db_dependency, todo_request: todo_Object):
+
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
+
+    newTodo = Todos(**todo_request.model_dump(),owner_id=user.get('user_id'))
+
     if newTodo is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Item not found")
     db.add(newTodo)

@@ -1,9 +1,8 @@
 import sys
 from datetime import timedelta, datetime, timezone
-from http.client import HTTPException
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from starlette import status
@@ -19,7 +18,6 @@ from jose import jwt, JWTError
 load_dotenv("files.env")
 secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("ALGORITHM")
-print(f"Algorithm: {algorithm}")
 
 router = APIRouter(
     prefix='/auth',
@@ -101,7 +99,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
                                  db: db_dependency):
     user = authenticate_user(form_data.username, form_data.password,db)
     if not user:
-        return "Failed Authentication"
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
 
     token = create_access_token(user.username, user.id,timedelta(minutes=20))
 

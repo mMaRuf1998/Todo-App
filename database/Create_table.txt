@@ -1,0 +1,26 @@
+Drop Table If Exists users;
+
+Create Table users(
+id Serial,
+email varchar(100) Default Null,
+username varchar(45) Default Null,
+first_name varchar(45) Default Null,
+last_name varchar(45) Default Null,
+hashed_password varchar(200) Default Null,
+is_active boolean Default Null,
+role varchar(45) Default Null,
+Primary Key (id)
+);
+
+Drop Table If Exists todos;
+
+Create Table todos(
+id Serial,
+title varchar(100) Default Null,
+description varchar(200) Default Null,
+priority integer Default Null,
+complete boolean Default Null,
+owner_id integer Default Null,
+Primary Key (id)
+);
+

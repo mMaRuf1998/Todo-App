@@ -1,0 +1,27 @@
+Drop Table If Exists users;
+
+Create Table users(
+`id` int(11) Not NULL auto_increment,
+`email` varchar(100) Default Null,
+`username` varchar(45) Default Null,
+`first_name` varchar(45) Default Null,
+`last_name` varchar(45) Default Null,
+`hashed_password` varchar(200) Default Null,
+`is_active` int(1) Default Null,
+`role` varchar(45) Default Null,
+Primary Key (`id`)
+) Engine=InnoDB auto_increment=1 Default Charset=latin1;
+
+Drop Table If Exists todos; 
+ 
+CREATE TABLE todos (
+    `id` int(11) Not NULL auto_increment,
+    `title` VARCHAR(100) DEFAULT NULL,
+    `description` VARCHAR(200) DEFAULT NULL,
+    `priority` int(1) DEFAULT NULL,
+    `complete` int(1) DEFAULT NULL,
+    `owner_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    Foreign Key (`owner_id`) References users(`id`) 
+) Engine=InnoDB auto_increment=1 Default Charset=latin1;
+

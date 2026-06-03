@@ -7,9 +7,9 @@ import pymysql
 load_dotenv("files.env")
 DB_PASS = os.getenv("DB_PASS")
 
-POSTGRESQL_DATABASE_URL = f"mysql+pymysql://root:{DB_PASS}@127.0.0.1:3306/todoapplicationdb"
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./todosapp.db'
 
-engine = create_engine(POSTGRESQL_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

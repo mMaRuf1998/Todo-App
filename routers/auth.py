@@ -59,6 +59,7 @@ class createUserRequest(BaseModel): #You can add validation here using Field/ Th
     password:str
     is_active:bool
     role:str
+    phone_number:str
 
 class Token(BaseModel):
     access_token: str
@@ -89,7 +90,8 @@ async def create_user(db: db_dependency,newUserRequest:createUserRequest):
         last_name=newUserRequest.last_name,
         hashed_password=bcrypt_context.hash(newUserRequest.password),
         is_active = newUserRequest.is_active,
-        role = newUserRequest.role
+        role = newUserRequest.role,
+        phone_number=newUserRequest.phone_number
     )
     db.add(newUser)
     db.commit()

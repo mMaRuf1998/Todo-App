@@ -2,8 +2,8 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status, Path
-from database import SessionLocal
-from models import Todos
+from ..database import SessionLocal, get_db
+from ..models import Todos
 from .auth import get_current_user
 router = APIRouter()
 
@@ -14,17 +14,11 @@ class todo_Object(BaseModel):
     priority: int = Field(gt=0,lt=6)
     complete: bool = Field(default=False)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 db_dependency = Annotated[Session,Depends(get_db)]
 user_dependency = Annotated[dict,Depends(get_current_user)]
 
-@router.get("/")
+@router.get("/",status_code=status.HTTP_200_OK)
 async def read_all(user: user_dependency,db: db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
@@ -57,7 +51,7 @@ async def create_todo(user: user_dependency, db:db_dependency, todo_request: tod
     db.add(newTodo)
     db.commit()
 
-@router.put("/todos/{todo_id}",status_code=status.HTTP_200_OK)
+@router.put("/todos/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
 async def update_todo(user: user_dependency, db: db_dependency, todo_request: todo_Object, todo_id: int = Path(gt=0)):
 
     if user is None:

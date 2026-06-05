@@ -7,15 +7,15 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from starlette import status
 
-from database import SessionLocal
-from models import Users
+from ..database import SessionLocal, get_db
+from ..models import Users
 from passlib.context import CryptContext
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 import os
 from dotenv import load_dotenv
 from jose import jwt, JWTError
 
-load_dotenv("files.env")
+load_dotenv("TodoApp/files.env")
 secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("ALGORITHM")
 
@@ -27,12 +27,6 @@ router = APIRouter(
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 db_dependency = Annotated[Session,Depends(get_db)]
 

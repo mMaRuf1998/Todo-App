@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status, Path, Query
 
-from database import SessionLocal
-from models import Todos,Users
+from ..database import SessionLocal, get_db
+from ..models import Todos,Users
 from .auth import get_current_user
 router = APIRouter()
 
@@ -20,12 +20,7 @@ class todo_Object(BaseModel):
     priority: int = Field(gt=0,lt=6)
     complete: bool = Field(default=False)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
 
 db_dependency = Annotated[Session,Depends(get_db)]
 user_dependency = Annotated[dict,Depends(get_current_user)]

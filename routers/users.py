@@ -32,13 +32,13 @@ router = APIRouter(
 
 @router.get('/',status_code=status.HTTP_200_OK)
 async def get_userinfo(user: user_dependency, db: db_dependency):
-    userData = db.query(Users).filter(Users.id==user.get('user_id')).first()
+    userData = db.query(Users).filter(Users.id == user.get('user_id')).first()
 
     if userData is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
     return userData
 
-@router.put('/changepassword',status_code=status.HTTP_200_OK)
+@router.put('/changepassword',status_code=status.HTTP_204_NO_CONTENT)
 async def change_password(user: user_dependency, db: db_dependency, oldpassword: str, password : Annotated[str, Query(min_length=6)]):
     userData = db.query(Users).filter(Users.id==user.get('user_id')).first()
 

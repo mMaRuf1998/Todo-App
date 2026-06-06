@@ -67,12 +67,16 @@ async def get_current_user(token: Annotated[str,Depends(oauth2_bearer)]):
         user_role:str = payload['user_role']
 
         if username is None or user_id is None:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
 
         return {'username':username,'user_id':user_id , 'user_role':user_role}
 
     except JWTError:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Could not validate credentials')
+
+    except KeyError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Could not validate credentials')
 
 
 @router.post("/",status_code=status.HTTP_201_CREATED)

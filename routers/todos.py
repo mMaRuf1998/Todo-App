@@ -5,7 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, status, Path
 from ..database import SessionLocal, get_db
 from ..models import Todos
 from .auth import get_current_user
-router = APIRouter()
+router = APIRouter(
+    prefix='/todos',
+    tags=['todos'],
+)
 
 
 class todo_Object(BaseModel):

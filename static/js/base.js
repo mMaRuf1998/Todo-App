@@ -155,6 +155,7 @@
                     window.location.href = '/todos/todo-page'; // Change this to your desired redirect page
                 } else {
                     // Handle error
+                    print("Error inside Base.js response")
                     const errorData = await response.json();
                     alert(`Error: ${errorData.detail}`);
                 }

@@ -29,21 +29,6 @@ def redirect_to_login():
 
     return redirect_response
 
-@router.get("/todo-page",status_code=status.HTTP_200_OK)
-async def render_all_todo(request: Request, db: db_dependency):
-        try:
-            user = await get_current_user(request.cookies.get("access_token"))
-
-
-            if user is None:
-                return redirect_to_login()
-
-            print(user)
-            todos = db.query(Todos).filter(Todos.owner_id==user.get('user_id')).all()
-            print(todos)
-            return templates.TemplateResponse("/todos.html",{"request":request,"todos":todos,"user":user})
-        except:
-            return redirect_to_login()
 
 
 
@@ -55,8 +40,20 @@ async def read_all(user: user_dependency,db: db_dependency):
     return db.query(Todos).filter(Todos.owner_id==user.get('user_id')).all()
 
 #Find a todo by ID:
+@router.get("/todo-page",status_code=status.HTTP_200_OK)
+async def render_all_todo(request: Request, db: db_dependency):
+        try:
+            user = await get_current_user(request.cookies.get("access_token"))
+            if user is None:
+                return redirect_to_login()
 
-@router.get("/todos/{todo_id}", status_code=status.HTTP_200_OK)
+            todos = db.query(Todos).filter(Todos.owner_id==user.get('user_id')).all()
+
+            return templates.TemplateResponse(request=request,name="todos.html",context={"todos": todos, "user": user})
+        except:
+            return redirect_to_login()
+
+@router.get("/{todo_id}", status_code=status.HTTP_200_OK)
 async def read_todo_by_id(user: user_dependency, db: db_dependency, todo_id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")
@@ -67,7 +64,7 @@ async def read_todo_by_id(user: user_dependency, db: db_dependency, todo_id: int
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Item not found")
 
 
-@router.post("/todos/create", status_code=status.HTTP_201_CREATED)
+@router.post("/create", status_code=status.HTTP_201_CREATED)
 async def create_todo(user: user_dependency, db:db_dependency, todo_request: todo_Object):
 
     if user is None:
@@ -80,7 +77,7 @@ async def create_todo(user: user_dependency, db:db_dependency, todo_request: tod
     db.add(newTodo)
     db.commit()
 
-@router.put("/todos/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
 async def update_todo(user: user_dependency, db: db_dependency, todo_request: todo_Object, todo_id: int = Path(gt=0)):
 
     if user is None:

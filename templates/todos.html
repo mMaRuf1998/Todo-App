@@ -1,39 +1,62 @@
 {% include 'layout.html' %}
 
         <div class="container">
+            <h1 class="text-center">Your Todos</h1>
             <div class="card">
-                <div class="card-header">
-                    Your Todos
+                <div class="card-header text-center">
+                    Pending
                 </div>
+
                 <div class="card-body">
                         <table class="table">
                               <thead>
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">First</th>
-                                  <th scope="col">Last</th>
-                                  <th scope="col">Handle</th>
-                                </tr>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Priority</th>
+                              <th>Status</th>
                               </thead>
                               <tbody>
+                              {% for todo in todos %}
+                              {% if not todo.complete%}
                                 <tr>
-                                  <th scope="row">1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td>@mdo</td>
+                                  <td>{{todo.title}}</td>
+                                  <td>{{todo.description}}</td>
+                                  <td>{{todo.priority}}</td>
+                                  <td>{{todo.complete}}</td>
+
                                 </tr>
+                              {% endif %}
+                              {% endfor %}
+                              </tbody>
+                            </table>
+
+
+                </div>
+                <div class="card-header text-center">
+                    Completed
+                </div>
+
+                <div class="card-body">
+                    <table class="table">
+                              <thead>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Priority</th>
+                              <th>Status</th>
+                              </thead>
+                              <tbody>
+                              {% for todo in todos %}
+                              {% if todo.complete%}
                                 <tr>
-                                  <th scope="row">2</th>
-                                  <td>Jacob</td>
-                                  <td>Thornton</td>
-                                  <td>@fat</td>
+                                  <td><del>{{todo.title}}</del></td>
+                                  <td><del>{{todo.description}}</del></td>
+                                  <td><del>{{todo.priority}}</del></td>
+                                  <td><del>{{todo.complete}}</del></td>
+
                                 </tr>
-                                <tr>
-                                  <th scope="row">3</th>
-                                  <td>Larry</td>
-                                  <td>the Bird</td>
-                                  <td>@twitter</td>
-                                </tr>
+                              {% endif %}
+                              {% endfor %}
+
                               </tbody>
                             </table>
                 </div>

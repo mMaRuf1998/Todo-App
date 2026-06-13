@@ -2,8 +2,6 @@
 
 Live: https://todo-app-final-tkky.onrender.com/
 
-You can user username:1234 password:1234 to check the system without registration.
-
 You can integrate mysql or postgresql. Just change database.py url.
 
 

@@ -1,4 +1,4 @@
-from idlelib.query import Query
+
 from typing import Annotated
 
 from passlib.context import CryptContext

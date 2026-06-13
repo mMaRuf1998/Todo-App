@@ -16,7 +16,9 @@ from dotenv import load_dotenv
 from jose import jwt, JWTError
 from fastapi.templating import Jinja2Templates
 
-load_dotenv("TodoApp/files.env")
+if os.path.exists("TodoApp/files.env"):
+    load_dotenv("TodoApp/files.env")
+
 secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("ALGORITHM")
 

@@ -4,7 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
 import pymysql
-load_dotenv("TodoApp/files.env")
+if os.path.exists("TodoApp/files.env"):
+    load_dotenv("TodoApp/files.env")
+    
 DB_PASS = os.getenv("DB_PASS")
 
 SQLALCHEMY_DATABASE_URL = 'sqlite:///./TodoApp/todosapp.db'

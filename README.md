@@ -3,7 +3,9 @@
 Live: https://todo-app-final-tkky.onrender.com/
 
 You can user username:1234 password:1234 to check the system without registration.
-You can integrate mysql or postgresqll. Just change database.py url. 
+
+You can integrate mysql or postgresqll. Just change database.py url.
+
 
 A full-featured task management web application built with **FastAPI**. This project helps users organize, track, and manage their daily tasks with user authentication and role-based access control.
 

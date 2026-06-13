@@ -176,10 +176,3 @@ This project uses SQLite as the database. The database file (`todosapp.db`) will
   "complete": "boolean (default: false)"
 }
 ```
-
-## 👤 Author
-
-**Maruf Ahmed**
-- GitHub: [@mMaRuf1998](https://github.com/mMaRuf1998)
-
-⭐ If you find this project useful, please give it a star on GitHub! ⭐

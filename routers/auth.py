@@ -66,7 +66,7 @@ class createUserRequest(BaseModel): #You can add validation here using Field/ Th
     first_name:str
     last_name:str
     password:str
-    is_active:bool
+    is_active:bool = True
     role:str
     phone_number:str
 
@@ -106,8 +106,10 @@ async def create_user(db: db_dependency,newUserRequest:createUserRequest):
         role = newUserRequest.role,
         phone_number=newUserRequest.phone_number
     )
+    print(newUser)
     db.add(newUser)
     db.commit()
+    print("Successful")
 
 @router.post("/token",response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
